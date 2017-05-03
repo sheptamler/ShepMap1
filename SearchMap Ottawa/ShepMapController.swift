@@ -11,19 +11,18 @@ import UIKit
 import MapKit
 
 let THOMPSON_GPS = (latitude: 41.9360805, longitude: -71.7978248)
+// Hartford_GPS:  41.767603, -72.684036
+// Yankee Stadium:  40.830304, -73.926089
 
 class ViewController: UIViewController, CLLocationManagerDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
-    
     @IBOutlet weak var btnHospital: UIButton!
     @IBOutlet weak var btnHotel: UIButton!
     @IBOutlet weak var btnMall: UIButton!
-    
     @IBOutlet weak var btnSupermarket: UIButton!
-    
     @IBOutlet weak var btnMenu: UIButton!
-    
+
     
     @IBAction func btnHospitalClick(_ sender: AnyObject) {
         mapView.removeAnnotations(mapView.annotations)
@@ -32,13 +31,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         reset()
     }
     
-    
     @IBAction func btnHotelClick(_ sender: AnyObject) {
         mapView.removeAnnotations(mapView.annotations)
         searchMap("Target")
         reset()
     }
-    
     
     @IBAction func btmMallClick(_ sender: AnyObject) {
         mapView.removeAnnotations(mapView.annotations)
@@ -46,26 +43,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         reset()
     }
     
-    
     @IBAction func btnSupermarket(_ sender: AnyObject) {
         mapView.removeAnnotations(mapView.annotations)
         searchMap("Stop & Shop")
         reset()
     }
     
-    let locationManager = CLLocationManager()
-// locationManager.requestWhenInUseAuthorization()
-//    let status = CLLocationManager.authorizationStatus()
-//    
-//    if status == CLAuthorizationStatus.authorizedWhenInUse {
-//    mapView.showsUserLocation = true
-//    } else {
-//    mapView.showsUserLocation = true  // i'm cheating here
-//    }
-
-    let initialLocation = CLLocation(latitude: THOMPSON_GPS.latitude, longitude: THOMPSON_GPS.longitude)
-    // search range
-    let initialDisplayRadius = CLLocationDistance(30000)
+//    let locationManager = CLLocationManager()
+//    let initialLocation = CLLocation(latitude: THOMPSON_GPS.latitude, longitude: THOMPSON_GPS.longitude)
+//    // search range
+//    let initialDisplayRadius = CLLocationDistance(20000)
     
     @IBAction func btnMenuClick(_ sender: AnyObject) {
         
@@ -86,6 +73,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         }, completion: nil)
         
     }
+    
+    let locationManager = CLLocationManager()
+    let initialLocation = CLLocation(latitude: THOMPSON_GPS.latitude, longitude: THOMPSON_GPS.longitude)
+    // search range?
+    let initialDisplayRadius = CLLocationDistance(20000)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,29 +100,20 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             self.btnMenu.transform = CGAffineTransform(rotationAngle: 0.25*3.1415927)
         }, completion: nil)
         
-        searchMap("place")
+        // create region
+        let region1 = MKCoordinateRegionMakeWithDistance(initialLocation.coordinate, initialDisplayRadius, initialDisplayRadius)
+        mapView.setRegion(region1, animated: true)
+
+        
+        searchMap("park")
         
         // create region
-        let region = MKCoordinateRegionMakeWithDistance(initialLocation.coordinate, initialDisplayRadius, initialDisplayRadius)
-        mapView.setRegion(region, animated: true)
-       
+        //        let region2 = MKCoordinateRegionMakeWithDistance(initialLocation.coordinate, initialDisplayRadius, initialDisplayRadius)
+        //        mapView.setRegion(region2, animated: true)
+        
         
         // Request for a user's authorization for location services
-        //
-        //   ERROR MESSAGE     2017-05-03 11:37:35.916 SearchMap[3917:1442206] This app has attempted to access privacy-sensitive data without a usage description. The app's Info.plist must contain an NSLocationWhenInUseUsageDescription key with a string value explaining to the user how the app uses this data
-        //  SHEP CHANGED INFO.PLIST AFTER ABOVE ERROR. NOW NO MORE ERROR BUT STILL DOESN'T ACTUALLY WORK
-        
-        
         locationManager.delegate = self
-        
-//        if(locationManager.responds(to: "requestAlwaysAuthorization") { // .responds("requestAlwaysAuthorization") {
-//            // respondsToSelector("requestAlwaysAuthorization")) {
-//            locationManager.requestAlwaysAuthorization()
-//            //or
-//            //locationManager.requestWhenInUseAuthorization()
-//        }
-        
-        // let locationManager = CLLocationManager()
         locationManager.requestWhenInUseAuthorization()
         let status = CLLocationManager.authorizationStatus()
         
@@ -164,9 +147,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     var mySubtitleString: String = ""
     
-    // add interested places
     func addAnnotation(_ title:String, subtitle:String, latitude: CLLocationDegrees, longitude: CLLocationDegrees){
         
+        let location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        let annotation = MyAnnotation(coordinate: location, title: title, subtitle: subtitle)
+        // annotation.pinTintColor
+        
+        mapView.addAnnotation(annotation)
         
         //        if let currentPlacemarkCoordinate = currentPlacemark?.location?.coordinate {
         //            if currentPlacemarkCoordinate.latitude == annotation.coordinate.latitude &&
@@ -188,12 +175,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         //            }
         //        }
         
-        
-        let location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        let annotation = MyAnnotation(coordinate: location, title: title, subtitle: subtitle)
-        // annotation.pinTintColor
-        
-        mapView.addAnnotation(annotation)
     }
     
     //search
