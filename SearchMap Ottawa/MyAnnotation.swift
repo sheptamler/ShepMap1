@@ -26,180 +26,210 @@ class MyAnnotation: NSObject,MKAnnotation{
 
 }
 
-//// this is where we draw an image on the leftCalloutAccessoryView
-//func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-//    if let thumbnailImageButton = view.leftCalloutAccessoryView as? UIButton,
-//        let url = (view.annotation as? GPX.shepSingleAnnotationData)?.thumbnailURL,
-//        let imageData = try? Data(contentsOf: url as URL), // blocks main queue
-//        let image = UIImage(data: imageData) {
-//        thumbnailImageButton.setImage(image, for: UIControlState())
-//    }
-//}
+extension ViewController: MKMapViewDelegate {
+    
+    // 1
+    //    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    //        if let annotation = annotation as? ShepSingleAnnotationData {
+    //            let identifier = "artPin"
+    //            var view: MKPinAnnotationView
+    //            if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+    //                as? MKPinAnnotationView { // 2
+    //                dequeuedView.annotation = annotation
+    //                view = dequeuedView
+    //            } else {
+    //                // 3
+    //                view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+    //                view.canShowCallout = true
+    //                view.calloutOffset = CGPoint(x: -5, y: 5)
+    //                view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure) as UIView
+    //
+    //                //view.annotationImage = UIImage(named: <#T##String#>)
+    //                //view.leftCalloutAccessoryView = UILabel(.text("Hello"))as UIView
+    //            }
+    //
+    //            // annotation.
+    //            view.pinTintColor = annotation.pinTintColor()
+    //            return view
+    //        }
+    //        return nil
+    //}
+    
+    
+    //// this is where we draw an image on the leftCalloutAccessoryView
+    //func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+    //    if let thumbnailImageButton = view.leftCalloutAccessoryView as? UIButton,
+    //        let url = (view.annotation as? GPX.shepSingleAnnotationData)?.thumbnailURL,
+    //        let imageData = try? Data(contentsOf: url as URL), // blocks main queue
+    //        let image = UIImage(data: imageData) {
+    //        thumbnailImageButton.setImage(image, for: UIControlState())
+    //    }
+    //}
+    
+    
+    //CODE FROM SHEP_MAPKIT
+    //
+    //func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    //    let identifier = "MyPin"
+    //
+    //    if annotation is MKUserLocation {
+    //        return nil
+    //    }
+    //
+    //    // Reuse the annotation if possible
+    //    var annotationView:MKPinAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
+    //
+    //    if annotationView == nil {
+    //        annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+    //        annotationView?.canShowCallout = true
+    //    }
+    //
+    ////    if let currentPlacemarkCoordinate = currentPlacemark?.location?.coordinate {
+    ////        if currentPlacemarkCoordinate.latitude == annotation.coordinate.latitude &&
+    ////            currentPlacemarkCoordinate.longitude == annotation.coordinate.longitude {
+    ////
+    ////            let leftIconView = UIImageView(frame: CGRect(x: 0, y: 0, width: 53, height: 53))
+    ////            leftIconView.image = UIImage(named: restaurant.image)!
+    ////            annotationView?.leftCalloutAccessoryView = leftIconView
+    ////
+    ////            // Pin color customization
+    ////            if #available(iOS 9.0, *) {
+    ////                annotationView?.pinTintColor = UIColor.orange
+    ////            }
+    ////        } else {
+    ////            // Pin color customization
+    ////            if #available(iOS 9.0, *) {
+    ////                annotationView?.pinTintColor = UIColor.red
+    ////            }
+    ////        }
+    //    }
+    //
+    //    // annotationView?.rightCalloutAccessoryView = UIButton(type: UIButtonType.detailDisclosure)
+    //
+    //   return annotationView
+    //}
+    
+    
+    // CODE FROM TRAX
+    //
+    //func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    //    var view: MKAnnotationView! = mapView.dequeueReusableAnnotationView(withIdentifier: Constants.AnnotationViewReuseIdentifier)
+    //    //
+    //    let reuseId = "temp" // Constants.AnnotationViewReuseIdentifier
+    //
+    //    var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
+    //    if pinView == nil {
+    //        pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
+    //        pinView!.canShowCallout = true
+    //        pinView!.animatesDrop = true
+    //        pinView!.pinTintColor = .purple
+    //        // pinView!.pinTintColor = GPX.shepSingleAnnotationData.pinTintColor(GPX.shepSingleAnnotationData)()
+    //    } else {
+    //        pinView!.pinTintColor = .green
+    //        pinView!.annotation = annotation
+    //    }
+    //
+    //    //        if annotation is GPX.shepSingleAnnotationData {
+    //    //            let shepsPinView: MKPinAnnotationView  = MKPinAnnotationView.redPinColor()
+    //    //            shepsPinView.pinTintColor = .purple // annotation.pinTintColor()
+    //    //            // shepsPinView.pinTintColor = annotation.pinTintColor() as! UIColor
+    //    //         }
+    //    //
+    //    if view == nil {
+    //        view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: Constants.AnnotationViewReuseIdentifier)
+    //        view.canShowCallout = true
+    //    } else {
+    //        view.annotation = annotation
+    //    }
+    //
+    //    view.isDraggable = annotation is EditableWaypoint
+    //
+    //    view.leftCalloutAccessoryView = nil
+    //    view.rightCalloutAccessoryView = nil
+    //    if let waypoint = annotation as? GPX.shepSingleAnnotationData {
+    //        if waypoint.thumbnailURL != nil {
+    //            view.leftCalloutAccessoryView = UIButton(frame: Constants.LeftCalloutFrame)
+    //        }
+    //        if waypoint is EditableWaypoint {
+    //            view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+    //        }
+    //    }
+    //
+    //    return view
+    //}
+    //
+    //
+    //
+    //// this is where we draw an image on the leftCalloutAccessoryView
+    //func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+    //    if let thumbnailImageButton = view.leftCalloutAccessoryView as? UIButton,
+    //        let url = (view.annotation as? GPX.shepSingleAnnotationData)?.thumbnailURL,
+    //        let imageData = try? Data(contentsOf: url as URL), // blocks main queue
+    //        let image = UIImage(data: imageData) {
+    //        thumbnailImageButton.setImage(image, for: UIControlState())
+    //    }
+    //}
+    //
+    //// calloutAccessoryControlTapped
+    //func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+    //    if control == view.leftCalloutAccessoryView {
+    //        performSegue(withIdentifier: Constants.ShowImageSegue, sender: view)
+    //    } else if control == view.rightCalloutAccessoryView  {
+    //        mapView.deselectAnnotation(view.annotation, animated: true)
+    //        performSegue(withIdentifier: Constants.EditUserWaypoint, sender: view)
+    //    }
+    //}
+    //
+    //// MARK: Navigation
+    //
+    //override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    //    let destination = segue.destination.contentViewController
+    //    let annotationView = sender as? MKAnnotationView
+    //    let waypoint = annotationView?.annotation as? GPX.shepSingleAnnotationData
+    //
+    //    if segue.identifier == Constants.ShowImageSegue {
+    //        if let ivc = destination as? ImageViewController {
+    //            ivc.imageURL = waypoint?.imageURL
+    //            ivc.title = waypoint?.name
+    //        }
+    //    } else if segue.identifier == Constants.EditUserWaypoint {
+    //        if let editableWaypoint = waypoint as? EditableWaypoint,
+    //            let ewvc = destination as? EditWaypointViewController {
+    //            if let ppc = ewvc.popoverPresentationController {
+    //                ppc.sourceRect = annotationView!.frame
+    //                ppc.delegate = self
+    //            }
+    //            ewvc.waypointToEdit = editableWaypoint
+    //        }
+    //    }
+    //}
+    //
+    // END OF CODE FROM TRAX
+    
+    
+    //        if let currentPlacemarkCoordinate = currentPlacemark?.location?.coordinate {
+    //            if currentPlacemarkCoordinate.latitude == annotation.coordinate.latitude &&
+    //                currentPlacemarkCoordinate.longitude == annotation.coordinate.longitude {
+    //
+    //                let leftIconView = UIImageView(frame: CGRect(x: 0, y: 0, width: 53, height: 53))
+    //                leftIconView.image = UIImage(named: restaurant.image)!
+    //                annotationView?.leftCalloutAccessoryView = leftIconView
+    //
+    //                // Pin color customization
+    //                if #available(iOS 9.0, *) {
+    //                    annotationView?.pinTintColor = UIColor.orange
+    //                }
+    //            } else {
+    //                // Pin color customization
+    //                if #available(iOS 9.0, *) {
+    //                    annotationView?.pinTintColor = UIColor.red
+    //                }
+    //            }
+    //        }
+    
+}
 
 
-//CODE FROM SHEP_MAPKIT
-//
-//func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-//    let identifier = "MyPin"
-//    
-//    if annotation is MKUserLocation {
-//        return nil
-//    }
-//    
-//    // Reuse the annotation if possible
-//    var annotationView:MKPinAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
-//    
-//    if annotationView == nil {
-//        annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
-//        annotationView?.canShowCallout = true
-//    }
-//    
-//    if let currentPlacemarkCoordinate = currentPlacemark?.location?.coordinate {
-//        if currentPlacemarkCoordinate.latitude == annotation.coordinate.latitude &&
-//            currentPlacemarkCoordinate.longitude == annotation.coordinate.longitude {
-//            
-//            let leftIconView = UIImageView(frame: CGRect(x: 0, y: 0, width: 53, height: 53))
-//            leftIconView.image = UIImage(named: restaurant.image)!
-//            annotationView?.leftCalloutAccessoryView = leftIconView
-//            
-//            // Pin color customization
-//            if #available(iOS 9.0, *) {
-//                annotationView?.pinTintColor = UIColor.orange
-//            }
-//        } else {
-//            // Pin color customization
-//            if #available(iOS 9.0, *) {
-//                annotationView?.pinTintColor = UIColor.red
-//            }
-//        }
-//    }
-//    
-//    annotationView?.rightCalloutAccessoryView = UIButton(type: UIButtonType.detailDisclosure)
-//    
-//    return annotationView
-//}
-
-
-// CODE FROM TRAX
-//
-//func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-//    var view: MKAnnotationView! = mapView.dequeueReusableAnnotationView(withIdentifier: Constants.AnnotationViewReuseIdentifier)
-//    //
-//    let reuseId = "temp" // Constants.AnnotationViewReuseIdentifier
-//    
-//    var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
-//    if pinView == nil {
-//        pinView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-//        pinView!.canShowCallout = true
-//        pinView!.animatesDrop = true
-//        pinView!.pinTintColor = .purple
-//        // pinView!.pinTintColor = GPX.shepSingleAnnotationData.pinTintColor(GPX.shepSingleAnnotationData)()
-//    } else {
-//        pinView!.pinTintColor = .green
-//        pinView!.annotation = annotation
-//    }
-//    
-//    //        if annotation is GPX.shepSingleAnnotationData {
-//    //            let shepsPinView: MKPinAnnotationView  = MKPinAnnotationView.redPinColor()
-//    //            shepsPinView.pinTintColor = .purple // annotation.pinTintColor()
-//    //            // shepsPinView.pinTintColor = annotation.pinTintColor() as! UIColor
-//    //         }
-//    //
-//    if view == nil {
-//        view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: Constants.AnnotationViewReuseIdentifier)
-//        view.canShowCallout = true
-//    } else {
-//        view.annotation = annotation
-//    }
-//    
-//    view.isDraggable = annotation is EditableWaypoint
-//    
-//    view.leftCalloutAccessoryView = nil
-//    view.rightCalloutAccessoryView = nil
-//    if let waypoint = annotation as? GPX.shepSingleAnnotationData {
-//        if waypoint.thumbnailURL != nil {
-//            view.leftCalloutAccessoryView = UIButton(frame: Constants.LeftCalloutFrame)
-//        }
-//        if waypoint is EditableWaypoint {
-//            view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
-//        }
-//    }
-//    
-//    return view
-//}
-//
-//
-//
-//// this is where we draw an image on the leftCalloutAccessoryView
-//func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-//    if let thumbnailImageButton = view.leftCalloutAccessoryView as? UIButton,
-//        let url = (view.annotation as? GPX.shepSingleAnnotationData)?.thumbnailURL,
-//        let imageData = try? Data(contentsOf: url as URL), // blocks main queue
-//        let image = UIImage(data: imageData) {
-//        thumbnailImageButton.setImage(image, for: UIControlState())
-//    }
-//}
-//
-//// calloutAccessoryControlTapped
-//func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-//    if control == view.leftCalloutAccessoryView {
-//        performSegue(withIdentifier: Constants.ShowImageSegue, sender: view)
-//    } else if control == view.rightCalloutAccessoryView  {
-//        mapView.deselectAnnotation(view.annotation, animated: true)
-//        performSegue(withIdentifier: Constants.EditUserWaypoint, sender: view)
-//    }
-//}
-//
-//// MARK: Navigation
-//
-//override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//    let destination = segue.destination.contentViewController
-//    let annotationView = sender as? MKAnnotationView
-//    let waypoint = annotationView?.annotation as? GPX.shepSingleAnnotationData
-//    
-//    if segue.identifier == Constants.ShowImageSegue {
-//        if let ivc = destination as? ImageViewController {
-//            ivc.imageURL = waypoint?.imageURL
-//            ivc.title = waypoint?.name
-//        }
-//    } else if segue.identifier == Constants.EditUserWaypoint {
-//        if let editableWaypoint = waypoint as? EditableWaypoint,
-//            let ewvc = destination as? EditWaypointViewController {
-//            if let ppc = ewvc.popoverPresentationController {
-//                ppc.sourceRect = annotationView!.frame
-//                ppc.delegate = self
-//            }
-//            ewvc.waypointToEdit = editableWaypoint
-//        }
-//    }
-//}
-//
-// END OF CODE FROM TRAX
-
-
-//        if let currentPlacemarkCoordinate = currentPlacemark?.location?.coordinate {
-//            if currentPlacemarkCoordinate.latitude == annotation.coordinate.latitude &&
-//                currentPlacemarkCoordinate.longitude == annotation.coordinate.longitude {
-//
-//                let leftIconView = UIImageView(frame: CGRect(x: 0, y: 0, width: 53, height: 53))
-//                leftIconView.image = UIImage(named: restaurant.image)!
-//                annotationView?.leftCalloutAccessoryView = leftIconView
-//
-//                // Pin color customization
-//                if #available(iOS 9.0, *) {
-//                    annotationView?.pinTintColor = UIColor.orange
-//                }
-//            } else {
-//                // Pin color customization
-//                if #available(iOS 9.0, *) {
-//                    annotationView?.pinTintColor = UIColor.red
-//                }
-//            }
-//        }
-
-
-
-//
 //  chooses pinTinColor depending on shepsVariable
 //
 //func pinTintColor() -> UIColor  {

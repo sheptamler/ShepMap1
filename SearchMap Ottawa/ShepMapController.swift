@@ -94,17 +94,15 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         self.btnMall.layer.cornerRadius = 10
         self.btnMenu.layer.cornerRadius = 10
         
-        
         UIView.animate(withDuration: 0.1, delay: 0.1, options: UIViewAnimationOptions.curveEaseOut, animations: {
             self.btnMenu.alpha = 1
             self.btnMenu.transform = CGAffineTransform(rotationAngle: 0.25*3.1415927)
         }, completion: nil)
         
-        // create region
+        // create region for map
         let region1 = MKCoordinateRegionMakeWithDistance(initialLocation.coordinate, initialDisplayRadius, initialDisplayRadius)
         mapView.setRegion(region1, animated: true)
 
-        
         searchMap("park")
         
         // create region
@@ -116,15 +114,68 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         let status = CLLocationManager.authorizationStatus()
-        
         if status == CLAuthorizationStatus.authorizedWhenInUse {
             mapView.showsUserLocation = true
         } else {
-            mapView.showsUserLocation = true  // i'm cheating here
+            // mapView.showsUserLocation = true  // i'm cheating here
         }
     }
     
-    
+    // LocalSearchRequest
+    //
+    // 搜索
+    func searchMap(_ place:String) {
+        let request = MKLocalSearchRequest()
+        request.naturalLanguageQuery = place
+        // 搜索当前区域
+        // search radius
+        let span = MKCoordinateSpanMake(0.09, 0.09)
+        request.region = MKCoordinateRegion(center: initialLocation.coordinate, span: span)
+        //启动搜索,并且把返回结果保存到数组中
+        let search = MKLocalSearch(request: request)
+        search.start { (response, error) -> Void in
+            guard let response = response else {
+                if let error = error {
+                    print(error)
+                }
+                return
+            }
+
+            let mapItems = response.mapItems
+            for item in (mapItems) {
+                if let myOtherVar = item.placemark.addressDictionary {
+                    print ("THIS IS DICTIONARY ITEM Name: \(myOtherVar ["Name"] ?? "nada")")
+                    //                    print ("THIS IS DICTIONARY ITEM Street: \(myOtherVar ["Street"] ?? "nada")")
+                    //                    print ("THIS IS DICTIONARY ITEM City: \(myOtherVar ["City"] ?? "nada")")
+                    //                    print ("THIS IS DICTIONARY ITEM State: \(myOtherVar ["State"] ?? "nada")")
+                    //                    print ("THIS IS DICTIONARY ITEM ZIP: \(myOtherVar ["ZIP"] ?? "nada")")
+                    //                    print ("THIS IS DICTIONARY ITEM SubAdministrativeArea: \(myOtherVar ["SubAdministrativeArea"] ?? "nada")")
+                    //                    print ("THIS IS DICTIONARY ITEM Thoroughfare: \(myOtherVar ["Thoroughfare"] ?? "nada")")
+                    //                    print ("THIS IS DICTIONARY ITEM Country: \(myOtherVar ["Country"] ?? "nada")")
+                    //                    print ("THIS IS DICTIONARY ITEM CountryCode: \(myOtherVar ["CountryCode"] ?? "nada")")
+                    print ("THIS IS DICTIONARY ITEM FormattedAddressLines: \(myOtherVar ["FormattedAddressLines"] ?? "nada")")
+                    print ("\n")
+                    
+                    var tempVar = (myOtherVar ["Street"] ?? "... ") as! String
+                    tempVar = tempVar + ", \(((myOtherVar ["City"] ?? "... ") as! String)), \((myOtherVar ["State"] ?? "got nothing") as! String)"
+                    self.mySubtitleString = tempVar
+                }
+                //
+                //                if let myPlacemark = item.placemark.name{
+                //                    print ("my placemark name: \(myPlacemark)")
+                //                }
+                //                if let myPlacemark = item.placemark.subtitle{
+                //                    print ("my placemark subtitle: \(myPlacemark)")
+                //                }
+                //                if let myPlacemark = item.placemark.locality{
+                //                    print ("my placemark locality: \(myPlacemark) \n\n")
+                //                }
+                self.addAnnotation(item.name!, subtitle: self.mySubtitleString, latitude: (item.placemark.location?.coordinate.latitude)!, longitude: (item.placemark.location?.coordinate.longitude)!)
+            }
+            
+        }
+    }
+
     func reset(){
         
         UIView.animate(withDuration: 0.2, delay: 0.2, options: UIViewAnimationOptions.curveEaseOut, animations: {
@@ -175,62 +226,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         //            }
         //        }
         
-    }
-    
-    //search
-    //
-    // 搜索
-    func searchMap(_ place:String) {
-        let request = MKLocalSearchRequest()
-        request.naturalLanguageQuery = place
-        // 搜索当前区域
-        // search radius
-        let span = MKCoordinateSpanMake(0.09, 0.09)
-        request.region = MKCoordinateRegion(center: initialLocation.coordinate, span: span)
-        //启动搜索,并且把返回结果保存到数组中
-        let search = MKLocalSearch(request: request)
-        search.start { (response, error) -> Void in
-            guard let response = response else {
-                if let error = error {
-                    print(error)
-                }
-                
-                return
-            }
-            //           let tempVar2 : [Dictionary<<#Key: Hashable#>, Any>]
-            let mapItems = response.mapItems
-            for item in (mapItems) {
-                if let myOtherVar = item.placemark.addressDictionary {
-                    print ("THIS IS DICTIONARY ITEM Name: \(myOtherVar ["Name"] ?? "nada")")
-                    print ("THIS IS DICTIONARY ITEM Street: \(myOtherVar ["Street"] ?? "nada")")
-                    print ("THIS IS DICTIONARY ITEM City: \(myOtherVar ["City"] ?? "nada")")
-                    print ("THIS IS DICTIONARY ITEM State: \(myOtherVar ["State"] ?? "nada")")
-                    print ("THIS IS DICTIONARY ITEM ZIP: \(myOtherVar ["ZIP"] ?? "nada")")
-                    print ("THIS IS DICTIONARY ITEM SubAdministrativeArea: \(myOtherVar ["SubAdministrativeArea"] ?? "nada")")
-                    print ("THIS IS DICTIONARY ITEM Thoroughfare: \(myOtherVar ["Thoroughfare"] ?? "nada")")
-                    print ("THIS IS DICTIONARY ITEM Country: \(myOtherVar ["Country"] ?? "nada")")
-                    print ("THIS IS DICTIONARY ITEM CountryCode: \(myOtherVar ["CountryCode"] ?? "nada")")
-                    print ("THIS IS DICTIONARY ITEM FormattedAddressLines: \(myOtherVar ["FormattedAddressLines"] ?? "nada")")
-                    print ("\n")
-                    
-                    var tempVar = (myOtherVar ["Street"] ?? "... ") as! String
-                    tempVar = tempVar + ", \(((myOtherVar ["City"] ?? "... ") as! String)), \((myOtherVar ["State"] ?? "got nothing") as! String)"
-                    self.mySubtitleString = tempVar
-                }
-                //
-                //                if let myPlacemark = item.placemark.name{
-                //                    print ("my placemark name: \(myPlacemark)")
-                //                }
-                //                if let myPlacemark = item.placemark.subtitle{
-                //                    print ("my placemark subtitle: \(myPlacemark)")
-                //                }
-                //                if let myPlacemark = item.placemark.locality{
-                //                    print ("my placemark locality: \(myPlacemark) \n\n")
-                //                }
-                self.addAnnotation(item.name!, subtitle: self.mySubtitleString, latitude: (item.placemark.location?.coordinate.latitude)!, longitude: (item.placemark.location?.coordinate.longitude)!)
-            }
-            
-        }
     }
     
     override func didReceiveMemoryWarning() {
