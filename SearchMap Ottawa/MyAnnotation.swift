@@ -27,7 +27,18 @@ class MyAnnotation: NSObject,MKAnnotation{
 
 }
 
-extension ViewController: MKMapViewDelegate {
+
+// function floating around on it's own?
+func shepCurrencyFromDouble(shepNumber : Double) -> String  {
+    let buckaroos = shepNumber as NSNumber
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .currency
+    // formatter.locale = NSLocale.currentLocale() // This is the default
+    return formatter.string(from: buckaroos)!
+}
+
+
+// extension ViewController: MKMapViewDelegate {
     
     // 1
     //    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -228,7 +239,7 @@ extension ViewController: MKMapViewDelegate {
     //            }
     //        }
     
-}
+// }
 
 
 //  chooses pinTinColor depending on shepsVariable

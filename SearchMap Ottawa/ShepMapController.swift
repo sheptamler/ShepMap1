@@ -78,6 +78,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     let initialLocation = CLLocation(latitude: THOMPSON_GPS.latitude, longitude: THOMPSON_GPS.longitude)
     // search range?
     let initialDisplayRadius = CLLocationDistance(20000)
+    var mySubtitleString: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -196,7 +197,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         
     }
     
-    var mySubtitleString: String = ""
     
     func addAnnotation(_ title:String, subtitle:String, latitude: CLLocationDegrees, longitude: CLLocationDegrees){
         
