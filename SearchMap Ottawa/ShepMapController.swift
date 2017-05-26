@@ -3,10 +3,6 @@
 //  SearchMap Ottawa
 //
 
-
-// shep added comments
-//
-
 import UIKit
 import MapKit
 
@@ -117,8 +113,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         let status = CLLocationManager.authorizationStatus()
         if status == CLAuthorizationStatus.authorizedWhenInUse {
             mapView.showsUserLocation = true
-        } else {
-            // mapView.showsUserLocation = true  // i'm cheating here
         }
     }
     
@@ -201,7 +195,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     func addAnnotation(_ title:String, subtitle:String, latitude: CLLocationDegrees, longitude: CLLocationDegrees){
         
         let location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        let annotation = MyAnnotation(coordinate: location, title: title, subtitle: subtitle)
+        let annotation = ShepSingleAnnotation(coordinate: location, title: title, subtitle: subtitle)
         // annotation.pinTintColor
         
         mapView.addAnnotation(annotation)
@@ -232,7 +226,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
     
 }
 

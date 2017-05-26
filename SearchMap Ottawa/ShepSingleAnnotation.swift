@@ -1,19 +1,8 @@
-//
-//  MyAnnotation.swift
-//  SearchMap Ottawa
-//
-//  Created by yu ni on 2016-10-12.
-//  Copyright © 2016 yu ni. All rights reserved.
-//
-
-// shep also editing
-//
-//
 
 import UIKit
 import MapKit
 
-class MyAnnotation: NSObject,MKAnnotation{
+class ShepSingleAnnotation: NSObject,MKAnnotation{
     
     var coordinate: CLLocationCoordinate2D = CLLocationCoordinate2DMake(0,0)
     var title:String?
@@ -24,7 +13,6 @@ class MyAnnotation: NSObject,MKAnnotation{
         self.title = title
         self.subtitle = subtitle
     }
-
 }
 
 
@@ -79,7 +67,7 @@ func shepCurrencyFromDouble(shepNumber : Double) -> String  {
     //}
     
     
-    //CODE FROM SHEP_MAPKIT
+    //CODE FROM SHEP_MAPKIT x?
     //
     //func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
     //    let identifier = "MyPin"
